@@ -4,5 +4,6 @@
   "description": "Analysis of symptoms in Salford before and during Covid-19 outbreak",
   "main": "index.js",
   "author": "Richard Williams <richard.williams@manchester.ac.uk>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {}
 }
