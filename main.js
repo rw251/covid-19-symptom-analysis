@@ -1,6 +1,9 @@
-const { processRawDataFiles, getTableOfResults } = require('./utils');
+const { processRawDataFiles, getTableOfResults, drawIndividualBarCharts } = require('./utils');
 
 const processedData = processRawDataFiles();
 const results = getTableOfResults(processedData);
-console.log(results);
+// console.log(results);
+
+drawIndividualBarCharts(processedData)
+  .then((x) => console.log('All charts written'));
 
