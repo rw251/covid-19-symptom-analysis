@@ -1,0 +1,48 @@
+1M01.00	Pain in wrist
+1M03.00	Shoulder joint painful on external rotation
+1M10.00	Knee pain
+1M12.00	Anterior knee pain
+N094.00	Pain in joint - arthralgia
+N094.11	Ache in joint
+N094000	Arthralgia of unspecified site
+N094100	Arthralgia of the shoulder region
+N094111	Shoulder joint pain
+N094200	Arthralgia of the upper arm
+N094211	Elbow joint pain
+N094300	Arthralgia of the forearm
+N094311	Wrist joint pain
+N094400	Arthralgia of the hand
+N094411	Hand joint pain
+N094500	Arthralgia of the pelvic region and thigh
+N094512	Hip joint pain
+N094600	Arthralgia of the lower leg
+N094611	Knee joint pain
+N094700	Arthralgia of the ankle and foot
+N094711	Ankle joint pain
+N094800	Arthralgia of other specified site
+N094900	Arthralgia of multiple joints
+N094A00	Arthralgia of shoulder
+N094B00	Arthralgia of sternoclavicular joint
+N094C00	Arthralgia of acromioclavicular joint
+N094D00	Arthralgia of elbow
+N094D11	Elbow joint pain
+N094E00	Arthralgia of distal radio-ulnar joint
+N094F00	Arthralgia of wrist
+N094F11	Wrist pain
+N094G00	Arthralgia of metacarpophalangeal joint
+N094H00	Arthralgia of proximal interphalangeal joint of finger
+N094J00	Arthralgia of distal interphalangeal joint of finger
+N094K00	Arthralgia of hip
+N094K12	Hip pain
+N094L00	Arthralgia of sacro-iliac joint
+N094M00	Arthralgia of knee
+N094N00	Arthralgia of tibio-fibular joint
+N094P00	Arthralgia of ankle
+N094Q00	Arthralgia of subtalar joint
+N094R00	Arthralgia of talonavicular joint
+N094S00	Arthralgia of other tarsal joint
+N094T00	Arthralgia of 1st metatarsophalangeal joint
+N094U00	Arthralgia of lesser metatarsophalangeal joint
+N094V00	Arthralgia of interphalangeal joint of toe
+N094W00	Anterior knee pain
+N094z00	Arthralgia NOS
