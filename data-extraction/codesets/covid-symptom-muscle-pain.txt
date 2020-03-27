@@ -1,0 +1,4 @@
+N241000	Myalgia unspecified
+N241011	Intercostal myalgia
+N241012	Muscle pain
+N241300	Viral myalgia
