@@ -1,0 +1,4 @@
+1A55.00	Dysuria
+R081.00	[D]Dysuria
+R081000	[D]Painful urination
+R081z00	[D]Dysuria NOS
