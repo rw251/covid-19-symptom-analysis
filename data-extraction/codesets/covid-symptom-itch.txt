@@ -1,0 +1,27 @@
+M115.00	Besnier's prurigo
+M18..00	Pruritus and related conditions
+M180.00	Pruritus ani
+M180.11	Perianal itch
+M180.13	Perianal irritation
+M181.00	Pruritus of genital organs
+M181.11	Pruritus vulvae
+M181000	Pruritus scroti
+M181100	Pruritus vulvae
+M182.00	Prurigo
+M182000	Prurigo aestivalis
+M182100	Hebra's prurigo
+M182200	Prurigo mitis
+M182300	Prurigo simplex
+M182z00	Prurigo NOS
+M183000	Prurigo nodularis (Hyde's disease)
+M18y.00	Other specified pruritic conditions
+M18y000	Pruritus aestivalis
+M18y100	Pruritus hiemalis
+M18y200	Pruritus senilis
+M18yz00	Other pruritic conditions NOS
+M18z.00	Pruritus NOS
+M18z.11	Skin irritation
+M18z.12	Itch
+Myu2A00	[X]Other prurigo
+Myu2B00	[X]Other pruritus
+Myu2D00	[X]Pruritus, unspecified

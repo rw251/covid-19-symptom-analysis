@@ -1,0 +1,37 @@
+{
+  "name": "Itch",
+  "description": "Any code suggestive of the symptom itch, unless there is a known reason - such as an allergic reaction or self inflicted injuries.",
+  "includeTerms": [
+    "itch",
+    "pruritus",
+    "skin irritation",
+    "prurigo",
+    "pruritic conditions",
+    "perianal irritation"
+  ],
+  "excludeTerms": [
+    "no itch",
+    "seven year itch - marital",
+    "itch relief cream",
+    "pregnancy pruritus",
+    "psychogenic pruritus",
+    "dhobie itch",
+    "sarcoptic itch",
+    "swimmers' itch",
+    "aquagenic pruritis",
+    "brachioradial pruritis",
+    "dermatitis artefacta",
+    "dermatitis factitia",
+    "neurotic excoriation",
+    "lichenification",
+    "sore bottom",
+    "vulva sore"
+  ],
+  "terminology": "Readv2",
+  "createdBy": {
+    "name": "Richard Williams",
+    "email": "1234richardwilliams@gmail.com"
+  },
+  "createdOn": "2020-03-27T14:49:29.025Z",
+  "lastUpdated": "2020-03-27T14:50:00.377Z"
+}
