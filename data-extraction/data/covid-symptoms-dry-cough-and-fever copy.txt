@@ -1,0 +1,6 @@
+Msg 102, Level 15, State 1, Server SRHTNWEHPSTRC2, Line 17
+Incorrect syntax near 'copy'.
+Msg 102, Level 15, State 1, Server SRHTNWEHPSTRC2, Line 18
+Incorrect syntax near 'copy'.
+Msg 102, Level 15, State 1, Server SRHTNWEHPSTRC2, Line 23
+Incorrect syntax near 'sub'.
