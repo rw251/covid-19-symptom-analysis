@@ -1,4 +1,8 @@
 @ECHO OFF
+
+REM move to batch dir 
+cd /d %~dp0
+
 SET SMASH.DB=PatientSafety_Records
 
 REM for each sql file execute against db
