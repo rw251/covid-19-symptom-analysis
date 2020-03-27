@@ -6,7 +6,7 @@ const { createCanvas } = require('canvas')
 let output = {};
 
 const processDataFile = (filename) => {
-  const symptom = filename.split('.')[1];
+  const symptom = filename.replace('covid-symptoms-', '').split('.')[0];
   output[symptom] = {};
   readFileSync(join('data-extraction', 'data', filename), 'utf8')
     .split('\n')
