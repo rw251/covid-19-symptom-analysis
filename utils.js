@@ -1,4 +1,4 @@
-const { readdirSync, readFileSync, createWriteStream } = require('fs');
+const { readdirSync, readFileSync, writeFileSync, createWriteStream } = require('fs');
 const { join } = require('path');
 const Chart = require('chart.js');
 const { createCanvas } = require('canvas')
@@ -30,6 +30,52 @@ exports.processRawDataFiles = (directory = './data-extraction/data') => {
   return output;
 }
 
+const codesFromFile = (pathToFile) => readFileSync(pathToFile, 'utf8')
+  .split('\n')
+  .map(x => x.split('\t')[0]);
+
+const codesWithoutTermCode = (codes) => {
+  const codesWithoutTermExtension = codes
+    .filter(x => x.length===7 && x[5] === '0' && x[6] === '0')
+    .map(x => x.substr(0,5));
+  return codes.concat(codesWithoutTermExtension);
+}
+
+const createHighTemperatureQuery = () => {
+  const template = readFileSync(join(__dirname, 'data-extraction', 'sql-queries', 'template-high-temperature.sql'), 'utf8');
+  const highTempCodes = codesFromFile(join(__dirname, 'data-extraction', 'codesets', 'covid-symptom-high-temperature.txt'), 'utf8');
+  const allHighTempCodes = codesWithoutTermCode(highTempCodes);
+  const tempCodes = codesFromFile(join(__dirname, 'data-extraction', 'codesets', 'covid-symptom-temperature.txt'), 'utf8');
+  const allTempCodes = codesWithoutTermCode(tempCodes);
+  let query = template.replace(/\{\{HIGH_TEMPERATURE_CODES\}\}/g, allHighTempCodes.join("','"));
+  query = query.replace(/\{\{TEMPERATURE_CODES\}\}/g, allTempCodes.join("','"));
+  writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-high-temperature.sql`), query);
+}
+
+exports.createSqlQueries = () => {
+  createHighTemperatureQuery();
+  const template = readFileSync(join(__dirname, 'data-extraction', 'sql-queries', 'template-standard.sql'), 'utf8');
+  readdirSync(join(__dirname, 'data-extraction', 'codesets'))
+    .filter(x => {
+      if(x.indexOf('.json') > -1) return false; // don't want the metadata
+      if(x.indexOf('temperature') > -1) return false; // temperature query is different
+      return true;
+    })
+    .map(filename => {
+      const symptomDashed = filename.split('.')[0].replace('covid-symptom-','');
+      const symptomCapitalCase = symptomDashed.split('-').map(x => x[0].toUpperCase() + x.slice(1)).join('');
+      const symptomLowerSpaced = symptomDashed.split('-').map(x => x.toLowerCase()).join(' ');
+      const codes = codesFromFile(join(__dirname, 'data-extraction', 'codesets', filename));
+      const allCodes = codesWithoutTermCode(codes);
+      const codeString = allCodes.join("','");
+      let query = template.replace(/\{\{SYMPTOM_LOWER_SPACED\}\}/g, symptomLowerSpaced);
+      query = query.replace(/\{\{SYMPTOM_CAPITAL_NO_SPACE\}\}/g, symptomCapitalCase);
+      query = query.replace(/\{\{SYMPTOM_DASHED\}\}/g, symptomDashed);
+      query = query.replace(/\{\{CLINICAL_CODES\}\}/g, codeString);
+      writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-${symptomDashed}.sql`), query);
+    })
+};
+
 exports.getTableOfResults = (processedData, fieldSeparator = '\t', rowSeparator = '\n') => {
   const header = ['Symptom'];
   for(var i = 2000; i < 2020; i++) {
@@ -58,7 +104,6 @@ const createBarChart = (label, rawData) => new Promise((resolve) => {
   Chart.defaults.global.defaultFontStyle = '600';
   var myChart = new Chart(ctx, {
     type: 'bar',
-    title: 'yo',
     data: {
         labels,
         datasets: [{
@@ -66,7 +111,6 @@ const createBarChart = (label, rawData) => new Promise((resolve) => {
             data,
             fill: false,
             backgroundColor: "rgb(91, 155, 213)",
-            borderColor: "rgb(75, 192, 192)",
             barPercentage: 0.6,
             lineTension: 0.1
         }]

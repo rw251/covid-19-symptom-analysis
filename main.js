@@ -1,4 +1,11 @@
-const { processRawDataFiles, getTableOfResults, drawIndividualBarCharts } = require('./utils');
+const { 
+  createSqlQueries,
+  processRawDataFiles, 
+  getTableOfResults, 
+  drawIndividualBarCharts 
+} = require('./utils');
+
+createSqlQueries();
 
 const processedData = processRawDataFiles();
 const results = getTableOfResults(processedData);
