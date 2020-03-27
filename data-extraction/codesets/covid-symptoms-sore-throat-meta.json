@@ -1,0 +1,25 @@
+{
+  "name": "Sore throat",
+  "description": "Any code indiciative of a sore throat symptom. This does not include ones where a diagnosis has been made such as streptococcal sore throat.",
+  "includeTerms": [
+    "sore throat",
+    "pharyngitis",
+    "throat soreness"
+  ],
+  "excludeTerms": [
+    "sore throat and blocked nose lozenges",
+    "oral rinse",
+    "chronic",
+    "allergic pharyngitis",
+    "no sore throat",
+    "streptococcal",
+    "atrophic pharyngitis"
+  ],
+  "terminology": "Readv2",
+  "createdBy": {
+    "name": "Richard Williams",
+    "email": "1234richardwilliams@gmail.com"
+  },
+  "createdOn": "2020-03-26T16:26:26.099Z",
+  "lastUpdated": "2020-03-26T16:26:30.377Z"
+}

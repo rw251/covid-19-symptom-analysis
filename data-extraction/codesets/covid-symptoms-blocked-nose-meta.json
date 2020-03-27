@@ -1,0 +1,17 @@
+{
+  "name": "Blocked nose",
+  "description": "Code for a blocked nose",
+  "includeTerms": [
+    "blocked nose"
+  ],
+  "excludeTerms": [
+    "blocked nose lozenges"
+  ],
+  "terminology": "Readv2",
+  "createdBy": {
+    "name": "Richard Williams",
+    "email": "1234richardwilliams@gmail.com"
+  },
+  "createdOn": "2020-03-26T11:44:19.163Z",
+  "lastUpdated": "2020-03-26T16:21:24.524Z"
+}

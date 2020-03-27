@@ -1,0 +1,41 @@
+{
+  "name": "Cough",
+  "description": "Any cough symptom including dry and chesty",
+  "includeTerms": [
+    "cough",
+    "coughing"
+  ],
+  "excludeTerms": [
+    "liquid",
+    "lozenge",
+    "pastille",
+    "compound",
+    "linctus",
+    "syrup",
+    "suppress",
+    "methadone",
+    "diamorphine",
+    "whooping",
+    "psychogenic",
+    "fracture",
+    "swab",
+    "smoker",
+    "headache",
+    "cough aggravates symptom",
+    "hernia-cough impulse shown",
+    "cough syncope",
+    "cough absent",
+    "cough on exercise",
+    "bovine cough",
+    "no cough",
+    "difficulty in coughing up sputum",
+    "sputum - symptom"
+  ],
+  "terminology": "Readv2",
+  "createdBy": {
+    "name": "Richard Williams",
+    "email": "1234richardwilliams@gmail.com"
+  },
+  "createdOn": "2020-03-26T08:11:13.054Z",
+  "lastUpdated": "2020-03-26T11:47:16.184Z"
+}

@@ -1,0 +1,13 @@
+165..00	Temperature symptoms
+165Z.00	Temperature symptom NOS
+2923.00	O/E -skin temperature abnormal
+2E21.00	O/E - oral temperature taken
+2E21.11	O/E - oral temperature
+2E22.00	O/E - axillary temperature
+2E23.00	O/E - groin temperature
+2E24.00	O/E - rectal temperature
+2E25.00	O/E - core temperature
+2E26.00	O/E - skin strip temperature
+2E27.00	O/E - tympanic temperature
+2E3..11	O/E - temperature level
+2E4..11	O/E - temperature character

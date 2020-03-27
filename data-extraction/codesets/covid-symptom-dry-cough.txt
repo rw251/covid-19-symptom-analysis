@@ -1,0 +1,4 @@
+1712.00	Dry cough
+171F.00	Cough with fever
+171K.00	Barking cough
+R062100	[D]Episodic dry cough

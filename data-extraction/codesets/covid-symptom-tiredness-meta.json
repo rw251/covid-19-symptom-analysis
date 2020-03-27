@@ -1,0 +1,53 @@
+{
+  "name": "Tiredness",
+  "description": "Any code suggestive of tiredness. Includes general fatigue symptoms but not if related to a specific condition e.g. post-virul fatigue, combat fatigue etc.",
+  "includeTerms": [
+    "tiredness",
+    "fatigue",
+    "lethargy",
+    "exhaustion",
+    "tired all the time",
+    "lassitude",
+    "asthenia",
+    "malaise/lethargy",
+    "[d]malaise and fatigue",
+    "[d]malaise and fatigue nos"
+  ],
+  "excludeTerms": [
+    "fatigue fracture",
+    "heat fatigue",
+    "chronic fatigue syndrome",
+    "post-viral fatigue",
+    "fatigue during pregnancy",
+    "combat fatigue",
+    "fatigue syndrome",
+    "heat exhaustion",
+    "maternal exhaustion",
+    "nervous exhaustion",
+    "excessive exertion exhaustion",
+    "exhaustion due to exposure",
+    "senile exhaustion",
+    "post polio exhaustion",
+    "postviral",
+    "post viral",
+    "overwork",
+    "tearful",
+    "senile asthenia",
+    "neurocirculatory asthenia",
+    "not tired",
+    "heavy legs",
+    "heavy feeling",
+    "muzzy head",
+    "postoperative depression",
+    "work stress",
+    "general weakness",
+    "malaise"
+  ],
+  "terminology": "Readv2",
+  "createdBy": {
+    "name": "Richard Williams",
+    "email": "1234richardwilliams@gmail.com"
+  },
+  "createdOn": "2020-03-26T09:35:18.990Z",
+  "lastUpdated": "2020-03-26T11:49:17.711Z"
+}

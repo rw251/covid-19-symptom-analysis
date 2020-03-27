@@ -1,0 +1,40 @@
+14OS.00	Green traffic light - low risk of serious illness (Feverish illness in children 2007)
+14OT.00	Amber traffic light - intermediate risk of serious illness (Feverish illness in children 2007)
+14OV.00	Red traffic light - high risk of serious illness (Feverish illness in children 2007)
+165..11	Fever symptoms
+165..12	Pyrexia symptoms
+1652.00	Feels hot/feverish
+1653.00	Fever with sweating
+1656.00	Feverish cold
+171F.00	Cough with fever
+2E...00	Examination of fever
+2E...11	O/E - fever
+2E1..00	O/E - fever - general
+2E12.00	O/E - fever examination - NAD
+2E13.00	O/E -pyrexia of unknown origin
+2E13.11	O/E - pyrexia - ? cause
+2E1Z.00	O/E - fever - general NOS
+2E2..00	O/E - method fever registered
+2E2Z.00	O/E - method fever taken NOS
+2E34.00	O/E - temperature elevated
+2E35.00	O/E - hyperpyrexia-> 40.5 oCEL
+2E4..00	O/E - character of fever
+2E41.00	O/E - fever - acute rise
+2E42.00	O/E - fever - gradual rise
+2E43.00	O/E - fever - continuous
+2E44.00	O/E - fever - remittent
+2E45.00	O/E - fever - intermittent
+2E46.00	O/E - staircase fever
+2E47.00	O/E - fever - irregular
+2E48.00	O/E - fever - fast fall-crisis
+2E49.00	O/E - fever-gradual fall-lysis
+2E4Z.00	O/E - fever character NOS
+2EZ..00	O/E - fever NOS
+R006.00	[D]Pyrexia of unknown origin
+R006.11	[D]Fever of unknown origin
+R006000	[D]Chills with fever
+R006100	[D]Hyperpyrexia NOS
+R006200	[D]Fever NOS
+R006300	[D]Persistent fever
+R006y00	[D]Other specified fever
+R006z00	[D]Pyrexia of unknown origin NOS

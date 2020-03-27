@@ -1,0 +1,27 @@
+{
+  "name": "Runny nose",
+  "description": "Any code suggestive of a runny nose. Includes generic 'nasal discharge' codes.",
+  "includeTerms": [
+    "runny nose",
+    "rhinorrhea",
+    "nasal discharge",
+    "nasal drip",
+    "nose discharge",
+    "nose running",
+    "rhinorrhoea",
+    "nose dripping"
+  ],
+  "excludeTerms": [
+    "epistaxis",
+    "postnasal discharge",
+    "cerebrospinal fluid rhinorrhoea",
+    "mucopurulent"
+  ],
+  "terminology": "Readv2",
+  "createdBy": {
+    "name": "Richard Williams",
+    "email": "1234richardwilliams@gmail.com"
+  },
+  "createdOn": "2020-03-26T09:52:01.567Z",
+  "lastUpdated": "2020-03-26T16:20:19.485Z"
+}

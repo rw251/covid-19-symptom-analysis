@@ -1,0 +1,17 @@
+168..00	Tiredness symptom
+168..11	Fatigue - symptom
+168..12	Lethargy - symptom
+1682.00	Fatigue
+1683.00	Tired all the time
+1683.11	C/O - "tired all the time"
+1684.00	Malaise/lethargy
+1688.00	Exhaustion
+168Z.00	Tiredness symptom NOS
+E205.12	Tired all the time
+R007.00	[D]Malaise and fatigue
+R007100	[D]Fatigue
+R007200	[D]Asthenia NOS
+R007300	[D]Lethargy
+R007500	[D]Tiredness
+R007z00	[D]Malaise and fatigue NOS
+R007z11	[D]Lassitude

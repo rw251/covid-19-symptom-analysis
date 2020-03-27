@@ -1,0 +1,24 @@
+171..00	Cough
+171..11	C/O - cough
+1712.00	Dry cough
+1713.00	Productive cough -clear sputum
+1714.00	Productive cough -green sputum
+1715.00	Productive cough-yellow sputum
+1716.00	Productive cough NOS
+1716.11	Coughing up phlegm
+1717.00	Night cough present
+1719.00	Chesty cough
+1719.11	Bronchial cough
+171A.00	Chronic cough
+171B.00	Persistent cough
+171C.00	Morning cough
+171D.00	Evening cough
+171E.00	Unexplained cough
+171F.00	Cough with fever
+171J.00	Reflux cough
+171K.00	Barking cough
+171Z.00	Cough symptom NOS
+173B.00	Nocturnal cough / wheeze
+R062.00	[D]Cough
+R062100	[D]Episodic dry cough
+R063000	[D]Cough with haemorrhage

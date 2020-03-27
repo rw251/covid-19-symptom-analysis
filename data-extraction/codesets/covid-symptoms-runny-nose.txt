@@ -1,0 +1,11 @@
+1C83.00	Nasal discharge present
+1C83.11	Nose running
+1C83.12	Nose dripping
+1C83.13	Rhinorrhoea
+1C84.00	C/O - post nasal drip
+2D2..00	O/E - nasal discharge
+2D2..11	O/E - nose discharge
+2D21.00	O/E - no nasal discharge
+2D22.00	O/E - rhinorrhoea
+2D23.00	O/E-nasal discharge-foul smell
+2D2Z.00	O/E - nasal discharge NOS
