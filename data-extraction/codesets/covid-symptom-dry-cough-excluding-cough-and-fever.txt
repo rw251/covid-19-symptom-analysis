@@ -1,0 +1,3 @@
+1712.00	Dry cough
+171K.00	Barking cough
+R062100	[D]Episodic dry cough
