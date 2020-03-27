@@ -12,12 +12,12 @@ WHILE (@dt < @dtEnd) BEGIN
     SET @dt = DATEADD(day, 1, @dt)
 END;
 
---tiredness
-PRINT 'Date,Tiredness'
-select [date], ISNULL(Tiredness, 0) as Tiredness from #AllDates d left outer join (
-select EntryDate, count(*) as Tiredness from (
+--{{SYMPTOM_LOWER_SPACED}}
+PRINT 'Date,{{SYMPTOM_CAPITAL_NO_SPACE}}'
+select [date], ISNULL({{SYMPTOM_CAPITAL_NO_SPACE}}, 0) as {{SYMPTOM_CAPITAL_NO_SPACE}} from #AllDates d left outer join (
+select EntryDate, count(*) as {{SYMPTOM_CAPITAL_NO_SPACE}} from (
 	select PatID, EntryDate from SIR_ALL_Records_Narrow
-	where ReadCode in ('168..00','168..11','168..12','1682.00','1683.00','1683.11','1684.00','1688.00','168Z.00','E205.12','R007.00','R007100','R007200','R007300','R007500','R007z00','R007z11','168..','1682.','1683.','1684.','1688.','168Z.','R007.','R0071','R0072','R0073','R0075','R007z')
+	where ReadCode in ('{{CLINICAL_CODES}}')
 	and EntryDate >= '2000-01-01'
 	group by PatID, EntryDate
 ) sub 

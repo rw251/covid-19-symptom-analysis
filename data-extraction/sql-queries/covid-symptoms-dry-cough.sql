@@ -12,7 +12,7 @@ WHILE (@dt < @dtEnd) BEGIN
     SET @dt = DATEADD(day, 1, @dt)
 END;
 
---dry but not chronic cough
+--dry cough
 PRINT 'Date,DryCough'
 select [date], ISNULL(DryCough, 0) as DryCough from #AllDates d left outer join (
 select EntryDate, count(*) as DryCough from (
