@@ -1,0 +1,42 @@
+{
+  "name": "Headache",
+  "description": "A headache. One that may be a symptom of a virus e.g. not chronic headaches or ones with an explanation e.g. caused by medication.",
+  "includeTerms": [
+    "headache"
+  ],
+  "excludeTerms": [
+    "no headache",
+    "headache associated with sexual activity",
+    "exertional headache",
+    "tablets",
+    "menopausal headache",
+    "chronic",
+    "history of",
+    "seen by general practitioner with special interest in headache",
+    "headache special interest general practitioner",
+    "psychogenic headache",
+    "induced headache",
+    "medication overuse headache",
+    "post traumatic",
+    "caused by oral contraceptive pill",
+    "after lumbar puncture",
+    "after myelogram",
+    "benign coital headache",
+    "cervicogenic headache",
+    "jaw pain",
+    "facial pain",
+    "face ache",
+    "cluster headache",
+    "cephalgia",
+    "pain in sinuses",
+    "heavy head",
+    "pain in head"
+  ],
+  "terminology": "Readv2",
+  "createdBy": {
+    "name": "Richard Williams",
+    "email": "1234richardwilliams@gmail.com"
+  },
+  "createdOn": "2020-03-27T14:25:21.670Z",
+  "lastUpdated": "2020-03-27T14:26:02.290Z"
+}

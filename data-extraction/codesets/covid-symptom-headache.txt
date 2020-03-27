@@ -1,0 +1,31 @@
+1B1G.00	Headache
+1B1G.11	C/O - a headache
+1B1G000	Sinus headache
+1B1G100	Viral headache
+1BA..00	Headache site
+1BA2.00	Generalised headache
+1BA3.00	Unilateral headache
+1BA4.00	Bilateral headache
+1BA5.00	Frontal headache
+1BA6.00	Occipital headache
+1BA7.00	Parietal headache
+1BA8.00	Temporal headache
+1BA9.00	Sinus headache
+1BAZ.00	Headache site NOS
+1BB..00	Headache character
+1BB1.00	Aching headache
+1BB2.00	Throbbing headache
+1BB3.00	Shooting headache
+1BB4.00	Morning headache
+1BBZ.00	Headache character NOS
+E278100	Tension headache
+E278111	Muscular headache
+F261100	Sick headache
+F262600	[X]Tension type headache
+F262900	Infrequent episodic tension-type headache
+F262A00	Frequent episodic tension-type headache
+F2X..00	Vascular headache, not elsewhere classified
+Fyu5400	[X]Other specified headache syndromes
+Fyu5A00	[X]Vascular headache, not elsewhere classified
+Fyu5F00	[X]Primary cough headache
+R040.00	[D]Headache
