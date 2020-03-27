@@ -12,10 +12,10 @@ WHILE (@dt < @dtEnd) BEGIN
     SET @dt = DATEADD(day, 1, @dt)
 END;
 
---dry cough and fever copy
-PRINT 'Date,DryCoughAndFever copy'
-select [date], ISNULL(DryCoughAndFever copy, 0) as DryCoughAndFever copy from #AllDates d left outer join (
-select EntryDate, count(*) as DryCoughAndFever copy from (
+--dry cough and fever
+PRINT 'Date,DryCoughAndFever'
+select [date], ISNULL(DryCoughAndFever, 0) as DryCoughAndFever from #AllDates d left outer join (
+select EntryDate, count(*) as DryCoughAndFever from (
 	select PatID, EntryDate from SIR_ALL_Records_Narrow
 	where ReadCode in ('171F.00','171F.')
 	and EntryDate >= '2000-01-01'
