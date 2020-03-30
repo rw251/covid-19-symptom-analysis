@@ -12,10 +12,6 @@ H02..13	Throat infection - pharyngitis
 H020.00	Acute gangrenous pharyngitis
 H021.00	Acute phlegmonous pharyngitis
 H022.00	Acute ulcerative pharyngitis
-H023.00	Acute bacterial pharyngitis
-H023000	Acute pneumococcal pharyngitis
-H023100	Acute staphylococcal pharyngitis
-H023z00	Acute bacterial pharyngitis NOS
 H024.00	Acute viral pharyngitis
 H02z.00	Acute pharyngitis NOS
 H121200	Granular pharyngitis

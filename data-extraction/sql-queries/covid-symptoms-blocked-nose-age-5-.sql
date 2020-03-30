@@ -21,7 +21,7 @@ select [date], ISNULL(BlockedNose, 0) as BlockedNose from #AllDates d left outer
 select EntryDate, count(*) as BlockedNose from (
 	select PatID, EntryDate from SIR_ALL_Records_Narrow s
 	inner join patients p on p.patid = s.PatID
-	where ReadCode in ('1C86.00','1C86.')
+	where ReadCode in ('1C86.00','H01..00','H01..11','H010.00','H010.11','H011.00','H012.00','H013.00','H014.00','H01y.00','H01y000','H01yz00','H01z.00','H130.12','H131.11','H13y100','Hyu0000','1C86.','H01..','H010.','H011.','H012.','H013.','H014.','H01y.','H01y0','H01yz','H01z.','H13y1','Hyu00')
 	and EntryDate >= '2000-01-01'
 	and year(EntryDate) - year_of_birth >= 5
 	and year(EntryDate) - year_of_birth < 120
