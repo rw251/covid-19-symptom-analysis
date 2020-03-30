@@ -4,6 +4,7 @@ const Chart = require('chart.js');
 const { createCanvas } = require('canvas')
 
 let output = {};
+let ageMarkers = [5]; // e.g. [5,15,39] would give 0-4, 5-14, 15-38, 39+
 
 const processDataFile = (filename) => {
   const symptom = filename.replace('covid-symptoms-', '').split('.')[0];
@@ -49,7 +50,25 @@ const createHighTemperatureQuery = () => {
   const allTempCodes = codesWithoutTermCode(tempCodes);
   let query = template.replace(/\{\{HIGH_TEMPERATURE_CODES\}\}/g, allHighTempCodes.join("','"));
   query = query.replace(/\{\{TEMPERATURE_CODES\}\}/g, allTempCodes.join("','"));
+  const ageQueryBase = query.slice(0);
+  query = query.replace(/\{\{!AGE\}\}[\s\S]*\{\{AGE\}\}/,"");
+  query = query.replace(/\{\{.?MAIN\}\}/g,"");
   writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-high-temperature.sql`), query);
+  // age queries
+  let lowerAge = 0;
+  ageMarkers.forEach(ageMarker => {
+    let ageBase = ageQueryBase.replace(/\{\{!MAIN\}\}[\s\S]*\{\{MAIN\}\}/,"");
+    ageBase = ageBase.replace(/\{\{.?AGE\}\}/g,"");
+    ageBase = ageBase.replace(/\{\{LOWER_AGE\}\}/g, lowerAge);
+    ageBase = ageBase.replace(/\{\{UPPER_AGE\}\}/g, ageMarker);
+    writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-high-temperature-age-${lowerAge}-${ageMarker}.sql`), ageBase);
+    lowerAge = ageMarker;
+  });
+  let ageBase = ageQueryBase.replace(/\{\{!MAIN\}\}[\s\S]*\{\{MAIN\}\}/,"");
+  ageBase = ageBase.replace(/\{\{.?AGE\}\}/g,"");
+  ageBase = ageBase.replace(/\{\{LOWER_AGE\}\}/g, lowerAge);
+  ageBase = ageBase.replace(/\{\{UPPER_AGE\}\}/g, 120);
+  writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-high-temperature-age-${lowerAge}-.sql`), ageBase);
 }
 
 exports.createSqlQueries = () => {
@@ -72,7 +91,25 @@ exports.createSqlQueries = () => {
       query = query.replace(/\{\{SYMPTOM_CAPITAL_NO_SPACE\}\}/g, symptomCapitalCase);
       query = query.replace(/\{\{SYMPTOM_DASHED\}\}/g, symptomDashed);
       query = query.replace(/\{\{CLINICAL_CODES\}\}/g, codeString);
+      const ageQueryBase = query.slice(0);
+      query = query.replace(/\{\{!AGE\}\}[\s\S]*\{\{AGE\}\}/,"");
+      query = query.replace(/\{\{.?MAIN\}\}/g,"");
       writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-${symptomDashed}.sql`), query);
+      // age queries
+      let lowerAge = 0;
+      ageMarkers.forEach(ageMarker => {
+        let ageBase = ageQueryBase.replace(/\{\{!MAIN\}\}[\s\S]*\{\{MAIN\}\}/,"");
+        ageBase = ageBase.replace(/\{\{.?AGE\}\}/g,"");
+        ageBase = ageBase.replace(/\{\{LOWER_AGE\}\}/g, lowerAge);
+        ageBase = ageBase.replace(/\{\{UPPER_AGE\}\}/g, ageMarker);
+        writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-${symptomDashed}-age-${lowerAge}-${ageMarker}.sql`), ageBase);
+        lowerAge = ageMarker;
+      });
+      let ageBase = ageQueryBase.replace(/\{\{!MAIN\}\}[\s\S]*\{\{MAIN\}\}/,"");
+      ageBase = ageBase.replace(/\{\{.?AGE\}\}/g,"");
+      ageBase = ageBase.replace(/\{\{LOWER_AGE\}\}/g, lowerAge);
+      ageBase = ageBase.replace(/\{\{UPPER_AGE\}\}/g, 120);
+      writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-${symptomDashed}-age-${lowerAge}-.sql`), ageBase);
     })
 };
 

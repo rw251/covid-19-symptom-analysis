@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --{{SYMPTOM_LOWER_SPACED}}
+{{!MAIN}}
 PRINT 'Date,{{SYMPTOM_CAPITAL_NO_SPACE}}'
 select [date], ISNULL({{SYMPTOM_CAPITAL_NO_SPACE}}, 0) as {{SYMPTOM_CAPITAL_NO_SPACE}} from #AllDates d left outer join (
 select EntryDate, count(*) as {{SYMPTOM_CAPITAL_NO_SPACE}} from (
@@ -24,3 +25,21 @@ select EntryDate, count(*) as {{SYMPTOM_CAPITAL_NO_SPACE}} from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+{{MAIN}}
+
+{{!AGE}}
+PRINT 'Date,{{SYMPTOM_CAPITAL_NO_SPACE}}-AGE-{{LOWER_AGE}}-{{UPPER_AGE}}'
+select [date], ISNULL({{SYMPTOM_CAPITAL_NO_SPACE}}, 0) as {{SYMPTOM_CAPITAL_NO_SPACE}} from #AllDates d left outer join (
+select EntryDate, count(*) as {{SYMPTOM_CAPITAL_NO_SPACE}} from (
+	select PatID, EntryDate from SIR_ALL_Records_Narrow s
+	inner join patients p on p.patid = s.PatID
+	where ReadCode in ('{{CLINICAL_CODES}}')
+	and EntryDate >= '2000-01-01'
+	and year(EntryDate) - year_of_birth >= {{LOWER_AGE}}
+	and year(EntryDate) - year_of_birth < {{UPPER_AGE}}
+	group by PatID, EntryDate
+) sub 
+group by EntryDate
+) a on a.EntryDate = d.date
+order by date;
+{{AGE}}
