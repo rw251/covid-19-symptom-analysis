@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --runny nose
+
 PRINT 'Date,RunnyNose'
 select [date], ISNULL(RunnyNose, 0) as RunnyNose from #AllDates d left outer join (
 select EntryDate, count(*) as RunnyNose from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as RunnyNose from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+

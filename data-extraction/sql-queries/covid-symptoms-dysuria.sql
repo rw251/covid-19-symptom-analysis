@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --dysuria
+
 PRINT 'Date,Dysuria'
 select [date], ISNULL(Dysuria, 0) as Dysuria from #AllDates d left outer join (
 select EntryDate, count(*) as Dysuria from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as Dysuria from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+

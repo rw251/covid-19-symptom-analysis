@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --dry cough excluding cough and fever
+
 PRINT 'Date,DryCoughExcludingCoughAndFever'
 select [date], ISNULL(DryCoughExcludingCoughAndFever, 0) as DryCoughExcludingCoughAndFever from #AllDates d left outer join (
 select EntryDate, count(*) as DryCoughExcludingCoughAndFever from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as DryCoughExcludingCoughAndFever from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+

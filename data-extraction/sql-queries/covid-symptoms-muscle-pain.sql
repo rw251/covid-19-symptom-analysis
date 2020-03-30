@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --muscle pain
+
 PRINT 'Date,MusclePain'
 select [date], ISNULL(MusclePain, 0) as MusclePain from #AllDates d left outer join (
 select EntryDate, count(*) as MusclePain from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as MusclePain from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+

@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --dry or chronic cough
+
 PRINT 'Date,DryOrChronicCough'
 select [date], ISNULL(DryOrChronicCough, 0) as DryOrChronicCough from #AllDates d left outer join (
 select EntryDate, count(*) as DryOrChronicCough from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as DryOrChronicCough from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+

@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --blocked nose
+
 PRINT 'Date,BlockedNose'
 select [date], ISNULL(BlockedNose, 0) as BlockedNose from #AllDates d left outer join (
 select EntryDate, count(*) as BlockedNose from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as BlockedNose from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+

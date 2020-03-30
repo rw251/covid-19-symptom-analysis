@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --itch
+
 PRINT 'Date,Itch'
 select [date], ISNULL(Itch, 0) as Itch from #AllDates d left outer join (
 select EntryDate, count(*) as Itch from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as Itch from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+

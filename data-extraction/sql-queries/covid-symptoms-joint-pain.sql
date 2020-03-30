@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --joint pain
+
 PRINT 'Date,JointPain'
 select [date], ISNULL(JointPain, 0) as JointPain from #AllDates d left outer join (
 select EntryDate, count(*) as JointPain from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as JointPain from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+

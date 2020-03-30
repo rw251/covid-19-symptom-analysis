@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --tiredness
+
 PRINT 'Date,Tiredness'
 select [date], ISNULL(Tiredness, 0) as Tiredness from #AllDates d left outer join (
 select EntryDate, count(*) as Tiredness from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as Tiredness from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+

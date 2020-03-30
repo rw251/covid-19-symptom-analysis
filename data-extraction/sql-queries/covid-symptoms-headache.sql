@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --headache
+
 PRINT 'Date,Headache'
 select [date], ISNULL(Headache, 0) as Headache from #AllDates d left outer join (
 select EntryDate, count(*) as Headache from (
@@ -24,3 +25,5 @@ select EntryDate, count(*) as Headache from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+
