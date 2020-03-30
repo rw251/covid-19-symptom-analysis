@@ -13,6 +13,7 @@ WHILE (@dt < @dtEnd) BEGIN
 END;
 
 --raised temperature
+
 PRINT 'Date,HighTemperature'
 select [date], ISNULL(HighTemperature, 0) as HighTemperature from #AllDates d left outer join (
 select EntryDate, count(*) as HighTemperature from (
@@ -33,3 +34,5 @@ select EntryDate, count(*) as HighTemperature from (
 group by EntryDate
 ) a on a.EntryDate = d.date
 order by date;
+
+
