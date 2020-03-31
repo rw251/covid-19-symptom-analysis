@@ -3,12 +3,26 @@ const { join } = require('path');
 const Chart = require('chart.js');
 const { createCanvas } = require('canvas')
 
-let output = {};
+let output;
 let ageMarkers = [5]; // e.g. [5,15,39] would give 0-4, 5-14, 15-38, 39+
+
+const resetOutput = () => {
+  output = {
+    yearCounts: {},
+    weekCounts: {},
+  };
+}
+
+const getStartOfWeek = (dateString) => {
+  const date = new Date(dateString);
+  date.setDate(date.getDate() + 1 - (date.getDay() || 7));
+  return date;
+}
 
 const processDataFile = (filename) => {
   const symptom = filename.replace('covid-symptoms-', '').split('.')[0];
-  output[symptom] = {};
+  output.yearCounts[symptom] = {};
+  output.weekCounts[symptom] = {};
   readFileSync(join('data-extraction', 'data', filename), 'utf8')
     .split('\n')
     .slice(1)
@@ -16,15 +30,25 @@ const processDataFile = (filename) => {
       const [dateString, count] = line.trim().replace('/\r/g','').split(',');
       if(!dateString) return;
       const date = new Date(dateString);
-      if(date.getMonth()<7) return;
       const year = date.getFullYear();
-      if(!output[symptom][year]) output[symptom][year] = 0;
-      output[symptom][year] += +count;
+      const startOfWeek = getStartOfWeek(dateString);
+      let startOfWeekYear = startOfWeek.getFullYear();
+      if(startOfWeekYear === 1999) return;
+      if(!output.weekCounts[symptom][startOfWeekYear]) {
+        output.weekCounts[symptom][startOfWeekYear] = {};
+      }
+      if(!output.weekCounts[symptom][startOfWeekYear][startOfWeek.getTime()]) {
+        output.weekCounts[symptom][startOfWeekYear][startOfWeek.getTime()] = 0;
+      }
+      output.weekCounts[symptom][startOfWeekYear][startOfWeek.getTime()] += +count;
+      if(date.getMonth()<7) return;
+      if(!output.yearCounts[symptom][year]) output.yearCounts[symptom][year] = 0;
+      output.yearCounts[symptom][year] += +count;
     });
 }
 
 exports.processRawDataFiles = (directory = './data-extraction/data') => {
-  output = {};
+  resetOutput();
   readdirSync(directory)
     .filter(x => x.indexOf('.txt') > -1)
     .forEach(file => processDataFile(file));
@@ -119,15 +143,86 @@ exports.getTableOfResults = (processedData, fieldSeparator = '\t', rowSeparator 
     header.push(i);
   }
   const tableRows = [header.join(fieldSeparator)];
-  Object.keys(output).forEach(key => {
+  Object.keys(processedData).forEach(key => {
     const row = [key];
     for(var i = 2000; i < 2020; i++) {
-      row.push(output[key][i]);
+      row.push(processedData[key][i]);
     }
     tableRows.push(row.join(fieldSeparator));
   });
   return tableRows.join(rowSeparator);
 }
+
+const createLineChart = (label, rawData) => new Promise((resolve) => {
+  const canvas = createCanvas(2000, 1000);
+  const ctx = canvas.getContext('2d');
+
+  const colours = [
+    'rgb(241, 196, 15)',
+    'rgb(39, 174, 96)',
+    'rgb(26, 188, 156)',
+    'rgb(41, 128, 185)',
+    'rgb(155, 89, 182)',
+    'rgb(192, 57, 43)',
+    'rgb(52, 73, 94)',
+  ];
+  
+  const labels = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52];
+  const datasets = Object.keys(rawData).filter(x => +x > 2013).sort().map((year, idx) => {
+    return {
+      label: year,
+      data: Object.keys(rawData[year]).filter(x => +x > 2013).sort().map(date => rawData[year][date]),
+      fill:false,
+      borderColor: colours[idx],
+      borderWidth: year >= 2019 ? 5 : 3,
+      lineTension: 0,
+      pointRadius: 0,
+    };
+  });
+ 
+  Chart.defaults.global.defaultFontColor = 'black';
+  Chart.defaults.global.defaultFontSize = 24;
+  Chart.defaults.global.defaultFontStyle = '600';
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets,
+    },
+    options: {
+      title: {
+        display: true,
+        text: `Weekly number of patients reporting the symptom "${label}" one line per year`,
+      },
+      responsive:false,
+      animation:false,
+      width:2000,
+      height:1000,
+      scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            },
+            gridLines: {
+              color: "rgb(30,30,30)",
+              zeroLineColor: "rgb(30,30,30)",
+              lineWidth: 2,
+            }
+        }],
+        xAxes: [{
+          gridLines: {
+            lineWidth: 0,
+          }
+        }]
+      },
+    }
+  });
+   
+  const out = createWriteStream(join(__dirname, 'images', `weekly-analysis-${label}.png`));
+  const stream = canvas.createPNGStream();
+  stream.pipe(out);
+  out.on('finish', resolve);
+});
 
 const createBarChart = (label, rawData) => new Promise((resolve) => {
   const canvas = createCanvas(1600, 900);
@@ -172,6 +267,7 @@ const createBarChart = (label, rawData) => new Promise((resolve) => {
             gridLines: {
               color: "rgb(30,30,30)",
               zeroLineColor: "rgb(30,30,30)",
+              lineWidth: 1.7,
             }
         }],
         xAxes: [{
@@ -193,5 +289,11 @@ exports.drawIndividualBarCharts = (processedData) => Promise.all(
   Object
     .keys(processedData)
     .map(label => createBarChart(label, processedData[label]))
+);
+
+exports.drawIndividualLineCharts = (rawData) => Promise.all(
+  Object
+    .keys(rawData)
+    .map(label => createLineChart(label, rawData[label]))
 );
 

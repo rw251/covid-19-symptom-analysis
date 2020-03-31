@@ -2,15 +2,18 @@ const {
   createSqlQueries,
   processRawDataFiles, 
   getTableOfResults, 
-  drawIndividualBarCharts 
+  drawIndividualBarCharts,
+  drawIndividualLineCharts,
 } = require('./utils');
 
 createSqlQueries();
 
-const processedData = processRawDataFiles();
-const results = getTableOfResults(processedData);
+const data = processRawDataFiles();
+const results = getTableOfResults(data.yearCounts);
 console.log(results);
 
-drawIndividualBarCharts(processedData)
-  .then((x) => console.log('All charts written'));
+Promise.all([
+  drawIndividualLineCharts(data.weekCounts),
+  drawIndividualBarCharts(data.yearCounts)
+]).then((x) => console.log('All charts written'));
 
