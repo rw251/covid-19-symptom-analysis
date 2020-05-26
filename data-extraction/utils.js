@@ -23,7 +23,7 @@ const processDataFile = (filename) => {
   const symptom = filename.replace('covid-symptoms-', '').split('.')[0];
   output.yearCounts[symptom] = {};
   output.weekCounts[symptom] = {};
-  readFileSync(join('data-extraction', 'data', filename), 'utf8')
+  readFileSync(join(__dirname, 'data', filename), 'utf8')
     .split('\n')
     .slice(1)
     .forEach(line => {
@@ -67,17 +67,17 @@ const codesWithoutTermCode = (codes) => {
 }
 
 const createHighTemperatureQuery = () => {
-  const template = readFileSync(join(__dirname, 'data-extraction', 'sql-queries', 'template-high-temperature.sql'), 'utf8');
-  const highTempCodes = codesFromFile(join(__dirname, 'data-extraction', 'codesets', 'covid-symptom-high-temperature.txt'), 'utf8');
+  const template = readFileSync(join(__dirname, 'sql-queries', 'template-high-temperature.sql'), 'utf8');
+  const highTempCodes = codesFromFile(join(__dirname, 'codesets', 'covid-symptom-high-temperature.txt'), 'utf8');
   const allHighTempCodes = codesWithoutTermCode(highTempCodes);
-  const tempCodes = codesFromFile(join(__dirname, 'data-extraction', 'codesets', 'covid-symptom-temperature.txt'), 'utf8');
+  const tempCodes = codesFromFile(join(__dirname, 'codesets', 'covid-symptom-temperature.txt'), 'utf8');
   const allTempCodes = codesWithoutTermCode(tempCodes);
   let query = template.replace(/\{\{HIGH_TEMPERATURE_CODES\}\}/g, allHighTempCodes.join("','"));
   query = query.replace(/\{\{TEMPERATURE_CODES\}\}/g, allTempCodes.join("','"));
   const ageQueryBase = query.slice(0);
   query = query.replace(/\{\{!AGE\}\}[\s\S]*\{\{AGE\}\}/,"");
   query = query.replace(/\{\{.?MAIN\}\}/g,"");
-  writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-high-temperature.sql`), query);
+  writeFileSync(join(__dirname, 'sql-queries', `covid-symptoms-high-temperature.sql`), query);
   // age queries
   let lowerAge = 0;
   ageMarkers.forEach(ageMarker => {
@@ -85,20 +85,20 @@ const createHighTemperatureQuery = () => {
     ageBase = ageBase.replace(/\{\{.?AGE\}\}/g,"");
     ageBase = ageBase.replace(/\{\{LOWER_AGE\}\}/g, lowerAge);
     ageBase = ageBase.replace(/\{\{UPPER_AGE\}\}/g, ageMarker);
-    writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-high-temperature-age-${lowerAge}-${ageMarker}.sql`), ageBase);
+    writeFileSync(join(__dirname, 'sql-queries', `covid-symptoms-high-temperature-age-${lowerAge}-${ageMarker}.sql`), ageBase);
     lowerAge = ageMarker;
   });
   let ageBase = ageQueryBase.replace(/\{\{!MAIN\}\}[\s\S]*\{\{MAIN\}\}/,"");
   ageBase = ageBase.replace(/\{\{.?AGE\}\}/g,"");
   ageBase = ageBase.replace(/\{\{LOWER_AGE\}\}/g, lowerAge);
   ageBase = ageBase.replace(/\{\{UPPER_AGE\}\}/g, 120);
-  writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-high-temperature-age-${lowerAge}-.sql`), ageBase);
+  writeFileSync(join(__dirname, 'sql-queries', `covid-symptoms-high-temperature-age-${lowerAge}-.sql`), ageBase);
 }
 
 exports.createSqlQueries = () => {
   createHighTemperatureQuery();
-  const template = readFileSync(join(__dirname, 'data-extraction', 'sql-queries', 'template-standard.sql'), 'utf8');
-  readdirSync(join(__dirname, 'data-extraction', 'codesets'))
+  const template = readFileSync(join(__dirname, 'sql-queries', 'template-standard.sql'), 'utf8');
+  readdirSync(join(__dirname, 'codesets'))
     .filter(x => {
       if(x.indexOf('.json') > -1) return false; // don't want the metadata
       if(x.indexOf('temperature') > -1) return false; // temperature query is different
@@ -108,7 +108,7 @@ exports.createSqlQueries = () => {
       const symptomDashed = filename.split('.')[0].replace('covid-symptom-','');
       const symptomCapitalCase = symptomDashed.split('-').map(x => x[0].toUpperCase() + x.slice(1)).join('');
       const symptomLowerSpaced = symptomDashed.split('-').map(x => x.toLowerCase()).join(' ');
-      const codes = codesFromFile(join(__dirname, 'data-extraction', 'codesets', filename));
+      const codes = codesFromFile(join(__dirname, 'codesets', filename));
       const allCodes = codesWithoutTermCode(codes);
       const codeString = allCodes.join("','");
       let query = template.replace(/\{\{SYMPTOM_LOWER_SPACED\}\}/g, symptomLowerSpaced);
@@ -118,7 +118,7 @@ exports.createSqlQueries = () => {
       const ageQueryBase = query.slice(0);
       query = query.replace(/\{\{!AGE\}\}[\s\S]*\{\{AGE\}\}/,"");
       query = query.replace(/\{\{.?MAIN\}\}/g,"");
-      writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-${symptomDashed}.sql`), query);
+      writeFileSync(join(__dirname, 'sql-queries', `covid-symptoms-${symptomDashed}.sql`), query);
       // age queries
       let lowerAge = 0;
       ageMarkers.forEach(ageMarker => {
@@ -126,14 +126,14 @@ exports.createSqlQueries = () => {
         ageBase = ageBase.replace(/\{\{.?AGE\}\}/g,"");
         ageBase = ageBase.replace(/\{\{LOWER_AGE\}\}/g, lowerAge);
         ageBase = ageBase.replace(/\{\{UPPER_AGE\}\}/g, ageMarker);
-        writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-${symptomDashed}-age-${lowerAge}-${ageMarker}.sql`), ageBase);
+        writeFileSync(join(__dirname, 'sql-queries', `covid-symptoms-${symptomDashed}-age-${lowerAge}-${ageMarker}.sql`), ageBase);
         lowerAge = ageMarker;
       });
       let ageBase = ageQueryBase.replace(/\{\{!MAIN\}\}[\s\S]*\{\{MAIN\}\}/,"");
       ageBase = ageBase.replace(/\{\{.?AGE\}\}/g,"");
       ageBase = ageBase.replace(/\{\{LOWER_AGE\}\}/g, lowerAge);
       ageBase = ageBase.replace(/\{\{UPPER_AGE\}\}/g, 120);
-      writeFileSync(join(__dirname, 'data-extraction', 'sql-queries', `covid-symptoms-${symptomDashed}-age-${lowerAge}-.sql`), ageBase);
+      writeFileSync(join(__dirname, 'sql-queries', `covid-symptoms-${symptomDashed}-age-${lowerAge}-.sql`), ageBase);
     })
 };
 
@@ -218,7 +218,7 @@ const createLineChart = (label, rawData) => new Promise((resolve) => {
     }
   });
    
-  const out = createWriteStream(join(__dirname, 'images', `weekly-analysis-${label}.png`));
+  const out = createWriteStream(join(__dirname, '..', 'images', `weekly-analysis-${label}.png`));
   const stream = canvas.createPNGStream();
   stream.pipe(out);
   out.on('finish', resolve);
@@ -279,7 +279,7 @@ const createBarChart = (label, rawData) => new Promise((resolve) => {
     }
   });
    
-  const out = createWriteStream(join(__dirname, 'images', `all-years-${label}.png`));
+  const out = createWriteStream(join(__dirname, '..', 'images', `all-years-${label}.png`));
   const stream = canvas.createPNGStream();
   stream.pipe(out);
   out.on('finish', resolve);
