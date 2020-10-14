@@ -1,0 +1,31 @@
+{
+  "includeTerms": [
+    "loss of smell",
+    "loss of taste",
+    "taste loss",
+    "taste disorder",
+    "taste problem",
+    "taste problems",
+    "taste disturbances",
+    "smell abnormal",
+    "smell problem",
+    "smell disorder",
+    "smell problems",
+    "parosmia",
+    "dysgeusia",
+    "parageusia",
+    "hemiageusia",
+    "anosmia"
+  ],
+  "excludeTerms": [
+    "nerve injury"
+  ],
+  "terminology": "Readv2",
+  "version": "v20160401",
+  "createdBy": {
+    "name": "Richard Williams",
+    "email": "1234richardwilliams@gmail.com"
+  },
+  "createdOn": "2020-10-14T13:27:52.301Z",
+  "lastUpdated": "2020-10-14T13:29:00.046Z"
+}
