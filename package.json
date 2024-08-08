@@ -15,6 +15,9 @@
     "chart.js": "^2.9.3"
   },
   "devDependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "node-fetch": "^2.6.0",
+    "pdfreader": "^1.0.7",
     "rimraf": "^3.0.2"
   }
 }

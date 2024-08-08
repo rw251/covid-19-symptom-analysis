@@ -1,0 +1,241 @@
+############
+## Comparing hopsitalisation rate for last 3 seasons
+
+loadData <- function(file, start = '2017-10-02', end = '2020-03-01') {
+  library(xts)
+  library(dplyr)
+  data <- read.csv(paste0('data-extraction/data/', file))
+  data$Date <- as.Date(data$Date,"%Y-%m-%d")
+  data <- data %>% filter(Date >= as.Date(start))
+  data <- data %>% filter(Date <= as.Date(end))
+  dataAsXts <- as.xts(data[,2],order.by=data$Date, start=c(2013,10))
+  dataAsXTSWeekly <- apply.weekly(dataAsXts,sum)
+  return(dataAsXTSWeekly)
+}
+
+loadBankHols <- function(start = '2017-10-02', end = '2020-03-01') {
+  library(dplyr)
+  bankHols <- read.delim('scraper/uk_working_days_per_week.txt', sep = '\t', header = TRUE, col.names = c("WeekStart", "WeekEnd", "NumWorkingDays", "Reason"));
+  bankHols$WeekEnd <- as.Date(bankHols$WeekEnd,"%Y-%m-%d")
+  bankHols <- bankHols %>% 
+    filter(WeekEnd >= as.Date(start) & WeekEnd <= as.Date(end)) %>% 
+    arrange(WeekEnd)
+}
+
+loadFluData <- function(file = 'scraper/phe_sentinel_usiss_rates.txt', start = '2017-10-02', end = '2020-03-01') {
+  library(xts)
+  library(ISOweek)
+  library(dplyr)
+  fluRateData <- read.delim(file, sep = '\t', header = FALSE, col.names = c("year", "week", "count"))
+  fluRateData$date <- ISOweek2date(paste(fluRateData$year, paste0('W', formatC(fluRateData$week, width = 2, format = "d", flag = "0")), 7, sep="-"))
+  
+  fluRateData <- fluRateData %>% filter(date >= as.Date(start))
+  fluRateData <- fluRateData %>% filter(date <= as.Date(end))
+  
+  fluRateDataAsXTS <- as.xts(fluRateData$count,order.by=fluRateData$date, start=c(2013,10))
+  fluRateDataAsXTSWeekly <- apply.weekly(fluRateDataAsXTS,sum)
+  return(fluRateDataAsXTSWeekly)
+}
+
+main <- function(symptom = 'high-temperature', includeFlu = TRUE, start = '2014-10-05',end='2020-03-01') {
+  filename <- paste0('covid-symptoms-', symptom, '.txt')
+  symptomData <- loadData(filename, start=start)
+  fluRateDataAsXTSWeekly <- loadFluData(start=start, end=end)
+  BH <- loadBankHols(start=start)
+  
+  ### Put all data into a single dataframe
+  data <- data.frame(
+    weekEnd = index(symptomData),
+    symp = coredata(symptomData), 
+    workingDays = BH$NumWorkingDays,
+    fluRateCases = coredata(fluRateDataAsXTSWeekly),
+    fluRateCasesWithLag = c(coredata(fluRateDataAsXTSWeekly)[-c(1)], 0),
+    month = format(index(symptomData),"%m")
+  )
+  data$t <- 1:length(data$month)
+  
+  ### Model using data up to Oct 2019 then predicting rest
+  modelData <- data %>% filter(as.Date(weekEnd) < as.Date('2019-10-03'))
+  library(ggplot2)
+  library(MASS)
+  library(scales)
+  fit <- glm.nb(
+    symp ~ as.factor(month)
+    + t 
+    + workingDays
+    , data = modelData)
+  plotTitle <- paste0("Observed vs expected number of ", symptom, " symptoms with a neg bin regression model (to Oct 13 2019) based on seasonality, trend, working days per week")
+  if(includeFlu) {
+    fit <- glm.nb(
+      symp ~ as.factor(month)
+      + t 
+      + workingDays
+      + fluRateCases
+      , data = modelData)
+    plotTitle <- paste0(plotTitle, ", and flu rate")
+  }
+  print(summary(fit))
+  allData <- cbind(data, predict(fit, data, type="response", se.fit = TRUE, interval= "prediction")) 
+  altData<-allData
+  altData$val<-altData$fit
+  allData$val<-allData$symp
+  altData$line <- ''
+  allData$line <- 'expected'
+  allData<-rbind(allData,altData)
+  allData$CI<-'95% confidence interval on expected value'
+  library('ciTools')
+  allData <- add_pi(allData, fit, names = c("LL", "UL"))
+  allData  %>% ggplot(aes(x=weekEnd, y=val))   + 
+    # geom_line(aes(x=weekEnd, y=fit, color= "Expected")) +
+    geom_line(aes(x=weekEnd, y=symp, color = "Observed\u00A0\u00A0\u00A0\u00A0")) +
+    scale_colour_manual(name=NULL, breaks=c('Observed\u00A0\u00A0\u00A0\u00A0','Expected'), values = c('Observed\u00A0\u00A0\u00A0\u00A0' = "blue", 'Expected' = "black")) +
+    geom_ribbon(aes(ymax = UL, ymin = LL, fill=CI), alpha= 0.1) +
+    scale_fill_manual(name=NULL, values = c(rgb(0, 0, 0, alpha = 0, maxColorValue = 255), "black")) +
+    
+    # Add line and label showing where model fit was up to
+    geom_vline(xintercept=as.numeric(allData$weekEnd[546]), colour="#ff0000", linetype="longdash") +
+    geom_text(x = as.numeric(allData$weekEnd[546]), y = 10, label = "Model fitted up to here", hjust=1) +
+    
+    guides(colour = guide_legend(order = 1), CI = guide_legend(order = 2)) +
+    labs(x = "Time (week/year)", y = "yLabel", color = "Year", title = plotTitle) + 
+    theme_light() +
+    theme(legend.position = "bottom", legend.spacing.x = unit(0.1, 'cm'), legend.key.width = unit(1, "cm"))
+}
+
+main(includeFlu = FALSE)
+main()
+main(symptom='cough', includeFlu = FALSE)
+main(symptom='cough')
+main(symptom='anosmia', includeFlu = FALSE)
+main(symptom='anosmia')
+main(symptom='blocked-nose', includeFlu = FALSE)
+main(symptom='blocked-nose')
+main(symptom='itch', includeFlu = FALSE)
+main(symptom='itch')
+main(symptom='sore-throat', includeFlu = FALSE)
+main(symptom='sore-throat')
+
+### Load the high temperature data
+highTempAsXTSWeekly <- loadData('covid-symptoms-high-temperature.txt')
+coughAsXTSWeekly <- loadData('covid-symptoms-cough.txt')
+dryCoughAsXTSWeekly <- loadData('covid-symptoms-dry-or-chronic-cough.txt')
+dysuriaAsXTSWeekly <- loadData('covid-symptoms-dysuria.txt')
+itchAsXTSWeekly <- loadData('covid-symptoms-itch.txt')
+
+
+# HT <- loadData('covid-symptoms-high-temperature.txt', start='2014-10-05')
+# fluRateDataAsXTSWeekly <- loadFluData(start='2014-10-05', end='2020-03-01')
+# BH <- loadBankHols(start='2014-10-05')
+# ### Put all data into a single dataframe
+# data <- data.frame(
+#   weekEnd = index(HT),
+#   highTemp = coredata(HT), 
+#   workingDays = BH$NumWorkingDays,
+#   fluRateCases = coredata(fluRateDataAsXTSWeekly),
+#   fluRateCasesWithLag = c(coredata(fluRateDataAsXTSWeekly)[-c(1)], 0),
+#   month = format(index(HT),"%m")
+# )
+# data$t <- 1:length(data$month)
+# 
+# ### Model using data up to Oct 2019 then predicting rest
+# modelData <- data %>% filter(as.Date(weekEnd) < as.Date('2019-10-03'))
+# library(ggplot2)
+# library(MASS)
+# fit <- glm.nb(
+#   highTemp ~ as.factor(month)
+#   + t 
+#   + workingDays
+#   + fluRateCases
+#   , data = modelData)
+# summary(fit)
+# allData <- cbind(data, predict(fit, data, type="response", se.fit = TRUE, interval= "prediction")) 
+# altData<-allData
+# altData$val<-altData$fit
+# allData$val<-allData$highTemp
+# altData$line <- ''
+# allData$line <- 'expected'
+# allData<-rbind(allData,altData)
+# allData$CI<-'95% confidence interval on expected value'
+# library('ciTools')
+# allData <- add_pi(allData, fit, names = c("LL", "UL"))
+# allData  %>% ggplot(aes(x=weekEnd, y=val))   + 
+#   # geom_line(aes(x=weekEnd, y=fit, color= "Expected")) +
+#   geom_line(aes(x=weekEnd, y=highTemp, color = "Observed\u00A0\u00A0\u00A0\u00A0")) +
+#   scale_colour_manual(name=NULL, breaks=c('Observed\u00A0\u00A0\u00A0\u00A0','Expected'), values = c('Observed\u00A0\u00A0\u00A0\u00A0' = "blue", 'Expected' = "black")) +
+#   geom_ribbon(aes(ymax = UL, ymin = LL, fill=CI), alpha= 0.1) +
+#   scale_fill_manual(name=NULL, values = c(rgb(0, 0, 0, alpha = 0, maxColorValue = 255), "black")) +
+#   guides(colour = guide_legend(order = 1), CI = guide_legend(order = 2)) +
+#   labs(x = "Time (week/year)", y = "yLabel", color = "Year", title = "Observed vs expected number of high temperature symptoms with a neg bin regression model (to Nov 2019) based on seasonality, trend, working days per week, and flu rate.") + 
+#   theme_light() +
+#   theme(legend.position = "bottom", legend.spacing.x = unit(0.1, 'cm'), legend.key.width = unit(1, "cm"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### As above but without weeks 21-39
+fluRateDataAsXTSWeekly <- loadFluData(file='scraper/phe_full_rate_data_not_padded.txt', start='2014-10-05', end='2020-03-01')
+HT <- loadData('covid-symptoms-high-temperature.txt', start='2014-10-05')
+HT <- HT[index(HT) %in% index(fluRateDataAsXTSWeekly)]
+BH <- loadBankHols(start='2014-10-05')
+BH <- BH[BH$WeekEnd %in% as.Date(substr(index(fluRateDataAsXTSWeekly),0,10)),]
+### Put all data into a single dataframe
+data <- data.frame(
+  weekEnd = index(HT),
+  highTemp = coredata(HT), 
+  workingDays = BH$NumWorkingDays,
+  fluRateCases = coredata(fluRateDataAsXTSWeekly),
+  fluRateCasesWithLag = c(coredata(fluRateDataAsXTSWeekly)[-c(1)], 0),
+  month = format(index(HT),"%m")
+)
+data$t <- 1:length(data$month)
+
+### Model using data up to Oct 2019 then predicting rest
+modelData <- data %>% filter(as.Date(weekEnd) < as.Date('2019-10-03'))
+library(ggplot2)
+library(MASS)
+fit <- glm.nb(
+  highTemp ~ as.factor(month)
+  + t 
+  + workingDays
+  # + fluRateCases
+  , data = modelData)
+summary(fit)
+allData <- cbind(data, predict(fit, data, type="response", se.fit = TRUE, interval= "prediction")) 
+altData<-allData
+altData$val<-altData$fit
+allData$val<-allData$highTemp
+altData$line <- ''
+allData$line <- 'expected'
+allData<-rbind(allData,altData)
+allData$CI<-'95% confidence interval on expected value'
+library('ciTools')
+allData <- add_pi(allData, fit, names = c("LL", "UL"))
+allData  %>% ggplot(aes(x=weekEnd, y=val))   + 
+  geom_line(aes(x=weekEnd, y=fit, color= "Expected")) +
+  geom_line(aes(x=weekEnd, y=highTemp, color = "Observed\u00A0\u00A0\u00A0\u00A0")) +
+  scale_colour_manual(name=NULL, breaks=c('Observed\u00A0\u00A0\u00A0\u00A0','Expected'), values = c('Observed\u00A0\u00A0\u00A0\u00A0' = "blue", 'Expected' = "black")) +
+  geom_ribbon(aes(ymax = UL, ymin = LL, fill=CI), alpha= 0.1) +
+  scale_fill_manual(name=NULL, values = c(rgb(0, 0, 0, alpha = 0, maxColorValue = 255), "black")) +
+  guides(colour = guide_legend(order = 1), CI = guide_legend(order = 2)) +
+  labs(x = "Time (week/year)", y = "yLabel", color = "Year", title = "Observed vs expected number of high temperature symptoms with a neg bin regression model (to Nov 2019) based on seasonality, trend, working days per week, and flu rate.") + 
+  theme_light() +
+  theme(legend.position = "bottom", legend.spacing.x = unit(0.1, 'cm'), legend.key.width = unit(1, "cm"))
